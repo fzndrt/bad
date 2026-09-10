@@ -405,7 +405,11 @@ if run:
         if isinstance(ihsg_raw.columns, pd.MultiIndex):
             ihsg_raw.columns = ihsg_raw.columns.get_level_values(-1)
         ihsg_raw.columns = [str(c).title() for c in ihsg_raw.columns]
-        ihsg_raw = ihsg_raw.dropna(subset=["Close"])
+if not ihsg_raw.empty and "Close" in ihsg_raw.columns:
+    ihsg_raw = ihsg_raw.dropna(subset=["Close"])
+else:
+    import streamlit as st
+    st.error("Gagal menarik data riwayat IHSG dari Yahoo Finance. Coba beberapa saat lagi.")
 
     results = []
     series = {}
